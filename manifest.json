@@ -1,0 +1,25 @@
+{
+  "name": "智舱测",
+  "short_name": "智舱测",
+  "description": "只用几分钟，任何人都能完成的专业智舱测试",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0a0a12",
+  "theme_color": "#0a0a12",
+  "categories": ["auto", "utilities"],
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
