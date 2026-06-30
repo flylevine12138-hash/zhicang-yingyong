@@ -178,7 +178,7 @@ const EvalUI = {
       { type: 'voice-task', index: 5, cmd: prefix + this._randomVideo.cmd, hint: this._randomVideo.hint },
       { type: 'voice-task', index: 6, cmd: prefix + this._randomSongSkip.cmd, hint: this._randomSongSkip.hint },
 
-      // C3口语理解（7题递进）
+      // C3口语理解（8题递进）
       { type: 'intro', icon: '🧩', title: '口语理解', desc: '8道递进式题目，测试车机对自然语言的理解和执行能力' },
       { type: 'oral', qIndex: 0 },
       { type: 'oral', qIndex: 1 },
@@ -187,6 +187,7 @@ const EvalUI = {
       { type: 'oral', qIndex: 4 },
       { type: 'oral', qIndex: 5 },
       { type: 'oral', qIndex: 6 },
+      { type: 'oral', qIndex: 7 },
 
       // C4多指令递增
       { type: 'intro', icon: '🧠', title: '多指令连续对话', desc: '逐轮增加指令数量，测出车机多指令处理的极限' },
