@@ -397,7 +397,7 @@ const Report = {
       else if (pct >= 0.4) oneLiner = `这款车的智舱有明显的提升空间，${weaknesses.length > 0 ? weaknesses[0] : '多项指标低于预期'}，建议关注后续OTA升级。`;
       else oneLiner = `这款车的智舱体验较差，${weaknesses.length > 1 ? weaknesses.slice(0,2).join('，') : weaknesses[0] || '多项核心能力不足'}，与同级别竞品差距明显。`;
 
-      // 评测数据已生成，打印到控制台备用
+      // 评测数据已生成，静默提交到云端
       const evalData = {
         brand: data.brand,
         city: data.city,
@@ -412,11 +412,25 @@ const Report = {
         one_liner: oneLiner,
         strengths: strengths,
         weaknesses: weaknesses,
-        duration_min: data.duration_min || null,
-        submitted_at: new Date().toISOString()
+        duration_min: data.duration_min || null
       };
-      console.log('📋 评测数据（备用）:', JSON.stringify(evalData, null, 2));
-      console.log('✅ 评测报告已生成（数据提交功能待接入后端）');
+
+      // 静默提交到 Vercel API（失败不影响用户查看报告）
+      try {
+        const apiRes = await fetch('https://zhicang-yingyong.vercel.app/api/submit-evaluation', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(evalData)
+        });
+        if (apiRes.ok) {
+          const result = await apiRes.json();
+          console.log('✅ 评测数据已成功提交到云端');
+        } else {
+          console.warn('⚠️ 数据提交返回异常:', apiRes.status);
+        }
+      } catch (submitErr) {
+        console.warn('⚠️ 数据提交失败（不影响本地报告展示）:', submitErr.message);
+      }
     } catch (err) {
       console.warn('⚠️ 数据处理异常:', err.message);
     }
