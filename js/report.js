@@ -5,6 +5,8 @@ const Report = {
     this._renderDimensions();
     this._renderSummary();
     this._drawRadarChart();
+    // 自动提交到数据库（静默，失败不影响展示）
+    this.submitToDatabase();
   },
 
   _renderMeta() {
@@ -347,6 +349,112 @@ const Report = {
       }).catch(() => {
         App.showToast('请手动分享');
       });
+    }
+  },
+
+  // ===== 提交评测数据到数据库 =====
+  async submitToDatabase() {
+    try {
+      const data = App.state.rawData;
+      const dims = this._dims || [];
+      const total = dims.reduce((s, d) => s + d.score, 0);
+      const totalMax = dims.reduce((s, d) => s + d.max, 0);
+      const pct = total / totalMax;
+
+      // 计算等级
+      let level;
+      if (pct >= 0.85) level = '非常优秀';
+      else if (pct >= 0.7) level = '表现良好';
+      else if (pct >= 0.55) level = '中规中矩';
+      else if (pct >= 0.4) level = '有待提升';
+      else level = '体验较差';
+
+      // 收集亮点和短板
+      const voiceEff = dims.find(d => d.name === '语音操作效率')?.score || 0;
+      const voiceSmart = dims.find(d => d.name === '语音智能')?.score || 0;
+      const uiDesign = dims.find(d => d.name === '界面设计')?.score || 0;
+      const ecosystem = dims.find(d => d.name === '生态丰富度')?.score || 0;
+      const experience = dims.find(d => d.name === '主观体验')?.score || 0;
+
+      const strengths = [];
+      const weaknesses = [];
+      if (voiceEff >= 20) strengths.push('语音操作效率极高，响应迅速');
+      else if (voiceEff < 12) weaknesses.push('语音操作响应偏慢，任务完成效率不高');
+      if (voiceSmart >= 18) strengths.push('语音理解能力强，口语和多指令处理优秀');
+      else if (voiceSmart < 10) weaknesses.push('语音理解能力有限，复杂指令和口语支持不足');
+      if (uiDesign >= 12) strengths.push('界面设计清晰，信息布局合理');
+      else if (uiDesign < 7) weaknesses.push('界面设计有待优化，操作反馈不够明确');
+      if (ecosystem >= 6) strengths.push('生态应用丰富，手机互联支持好');
+      else if (ecosystem < 4) weaknesses.push('生态应用较少，手机互联支持有限');
+      if (experience >= 8) strengths.push('系统流畅度好，安全感设计到位');
+      else if (experience < 5) weaknesses.push('系统偶有卡顿，安全感提示不足');
+
+      // 一句话评价
+      let oneLiner;
+      if (pct >= 0.85) oneLiner = `这款车的智舱综合实力强劲，语音交互灵敏精准，是一台真正聪明的智能汽车。`;
+      else if (pct >= 0.7) oneLiner = `这款车的智舱整体表现良好，${strengths.length > 0 ? strengths[0] : '各项指标均衡'}，日常使用体验令人满意。`;
+      else if (pct >= 0.55) oneLiner = `这款车的智舱中规中矩，${strengths.length > 0 ? strengths[0] : '基础功能可用'}${weaknesses.length > 0 ? '，但' + weaknesses[0] : ''}。`;
+      else if (pct >= 0.4) oneLiner = `这款车的智舱有明显的提升空间，${weaknesses.length > 0 ? weaknesses[0] : '多项指标低于预期'}，建议关注后续OTA升级。`;
+      else oneLiner = `这款车的智舱体验较差，${weaknesses.length > 1 ? weaknesses.slice(0,2).join('，') : weaknesses[0] || '多项核心能力不足'}，与同级别竞品差距明显。`;
+
+      const reportPayload = {
+        brand: data.brand,
+        city: data.city,
+        wake_word: data.wakeWord,
+        total_score: Math.round(total),
+        voice_efficiency_score: Math.round(voiceEff),
+        voice_smart_score: Math.round(voiceSmart),
+        interface_score: Math.round(uiDesign),
+        ecosystem_score: Math.round(ecosystem),
+        subjective_score: Math.round(experience),
+        level: level,
+        one_liner: oneLiner,
+        strengths: strengths,
+        weaknesses: weaknesses,
+        duration_min: data.duration_min || null
+      };
+
+      const detailsPayload = {
+        voice_tasks: data.voiceTasks || [],
+        oral_understanding: data.oralUnderstanding || [],
+        multi_cmd_rounds: data.multiCmdRounds || [],
+        subjective: data.subjective || {},
+        capabilities: data.capabilities || {}
+      };
+
+      // 提交主表数据
+      const reportRes = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/evaluation_reports`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_CONFIG.anonKey,
+          'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+          'Content-Type': 'application/json',
+          'Prefer': 'return=representation'
+        },
+        body: JSON.stringify(reportPayload)
+      });
+
+      if (!reportRes.ok) throw new Error(`主表提交失败: ${reportRes.status}`);
+
+      const [reportRow] = await reportRes.json();
+
+      // 提交详细数据
+      await fetch(`${SUPABASE_CONFIG.url}/rest/v1/evaluation_details`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_CONFIG.anonKey,
+          'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          report_id: reportRow.id,
+          ...detailsPayload
+        })
+      });
+
+      console.log('✅ 评测报告已提交到数据库');
+    } catch (err) {
+      console.warn('⚠️ 数据提交失败（不影响本地报告展示）:', err.message);
     }
   }
 };
