@@ -397,7 +397,8 @@ const Report = {
       else if (pct >= 0.4) oneLiner = `这款车的智舱有明显的提升空间，${weaknesses.length > 0 ? weaknesses[0] : '多项指标低于预期'}，建议关注后续OTA升级。`;
       else oneLiner = `这款车的智舱体验较差，${weaknesses.length > 1 ? weaknesses.slice(0,2).join('，') : weaknesses[0] || '多项核心能力不足'}，与同级别竞品差距明显。`;
 
-      const reportPayload = {
+      // 评测数据已生成，打印到控制台备用
+      const evalData = {
         brand: data.brand,
         city: data.city,
         wake_word: data.wakeWord,
@@ -411,50 +412,13 @@ const Report = {
         one_liner: oneLiner,
         strengths: strengths,
         weaknesses: weaknesses,
-        duration_min: data.duration_min || null
+        duration_min: data.duration_min || null,
+        submitted_at: new Date().toISOString()
       };
-
-      const detailsPayload = {
-        voice_tasks: data.voiceTasks || [],
-        oral_understanding: data.oralUnderstanding || [],
-        multi_cmd_rounds: data.multiCmdRounds || [],
-        subjective: data.subjective || {},
-        capabilities: data.capabilities || {}
-      };
-
-      // 提交主表数据
-      const reportRes = await fetch(`${SUPABASE_CONFIG.url}/rest/v1/evaluation_reports`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_CONFIG.anonKey,
-          'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
-          'Content-Type': 'application/json',
-          'Prefer': 'return=representation'
-        },
-        body: JSON.stringify(reportPayload)
-      });
-
-      if (!reportRes.ok) throw new Error(`主表提交失败: ${reportRes.status}`);
-
-      const [reportRow] = await reportRes.json();
-
-      // 提交详细数据
-      await fetch(`${SUPABASE_CONFIG.url}/rest/v1/evaluation_details`, {
-        method: 'POST',
-        headers: {
-          'apikey': SUPABASE_CONFIG.anonKey,
-          'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          report_id: reportRow.id,
-          ...detailsPayload
-        })
-      });
-
-      console.log('✅ 评测报告已提交到数据库');
+      console.log('📋 评测数据（备用）:', JSON.stringify(evalData, null, 2));
+      console.log('✅ 评测报告已生成（数据提交功能待接入后端）');
     } catch (err) {
-      console.warn('⚠️ 数据提交失败（不影响本地报告展示）:', err.message);
+      console.warn('⚠️ 数据处理异常:', err.message);
     }
   }
 };

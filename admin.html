@@ -228,8 +228,11 @@
 
 <script>
 // ===== 配置 =====
-const SUPABASE_URL = 'https://tblmdchsqmtmvflwge.supabase.co';
-const SUPABASE_SERVICE_KEY = 'sb_secret_edaMqMLEs29ZSVphiMNZjg_6eMjLq9n';
+const GITHUB_CONFIG = {
+  owner: 'flylevine12138-hash',
+  repo: 'zhicang-yingyong',
+  apiBase: 'https://api.github.com/repos/flylevine12138-hash/zhicang-yingyong'
+};
 
 // 访问密码（你可以随时修改这个密码）
 const ACCESS_PASSWORD = 'zhicangce2026';
@@ -288,30 +291,37 @@ const Admin = {
   },
 
   // 加载数据
+  // 加载数据（从 GitHub Issues 读取）
   async loadData() {
     try {
-      let url = `${SUPABASE_URL}/rest/v1/evaluation_reports?order=created_at.desc&limit=500`;
-      
-      const brandFilter = document.getElementById('filterBrand').value;
-      const cityFilter = document.getElementById('filterCity').value;
-      const levelFilter = document.getElementById('filterLevel').value;
-
-      const filters = [];
-      if (brandFilter) filters.push(`brand.eq.${encodeURIComponent(brandFilter)}`);
-      if (cityFilter) filters.push(`city.eq.${encodeURIComponent(cityFilter)}`);
-      if (levelFilter) filters.push(`level.eq.${encodeURIComponent(levelFilter)}`);
-      if (filters.length) url += '&' + filters.join('&');
-
-      const res = await fetch(url, {
-        headers: {
-          'apikey': SUPABASE_SERVICE_KEY,
-          'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+      const res = await fetch(
+        `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/issues?state=all&per_page=100&labels=evaluation`,
+        {
+          headers: {
+            'Accept': 'application/vnd.github.v3+json'
+          }
         }
-      });
+      );
 
       if (!res.ok) throw new Error(`加载数据失败: ${res.status}`);
 
-      this.allData = await res.json();
+      const issues = await res.json();
+
+      // 解析每个 issue 的 body（JSON 格式）
+      this.allData = issues
+        .map(issue => {
+          try {
+            const data = JSON.parse(issue.body);
+            data.issue_number = issue.number;
+            data.issue_html_url = issue.html_url;
+            data.submitted_at = issue.created_at;
+            return data;
+          } catch(e) {
+            return null;
+          }
+        })
+        .filter(Boolean);
+
       this.renderTable();
       this.updateStats();
       this.updateFilters();
@@ -352,7 +362,7 @@ const Admin = {
         <td>${r.ecosystem_score ?? '--'}</td>
         <td>${r.subjective_score ?? '--'}</td>
         <td><span class="badge ${levelBadgeClass[r.level] || 'badge-average'}">${this.esc(r.level || '--')}</span></td>
-        <td class="text-dim">${fmtDate(r.created_at)}</td>
+        <td class="text-dim">${fmtDate(r.submitted_at)}</td>
       </tr>
     `).join('');
   },
@@ -400,7 +410,7 @@ const Admin = {
       r.voice_efficiency_score, r.voice_smart_score,
       r.interface_score, r.ecosystem_score, r.subjective_score,
       r.level, `"${(r.one_liner||'').replace(/"/g,'""')}"`,
-      r.duration_min, r.created_at
+      r.duration_min, r.submitted_at
     ]);
 
     const csv = '\uFEFF' + [headers, ...rows].map(row => row.join(',')).join('\n');
