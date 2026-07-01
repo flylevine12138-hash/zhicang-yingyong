@@ -1,1 +1,24 @@
-[]
+[
+  {
+    "brand": "С��",
+    "city": "����",
+    "wake_word": "���С��",
+    "total_score": 72,
+    "voice_efficiency_score": 22,
+    "voice_smart_score": 18,
+    "interface_score": 10,
+    "ecosystem_score": 12,
+    "subjective_score": 7,
+    "level": "��������",
+    "one_liner": "����һ����������",
+    "strengths": [
+      "��������Ч�ʼ���"
+    ],
+    "weaknesses": [
+      "��̬Ӧ�ý���"
+    ],
+    "duration_min": 15,
+    "submitted_at": "2026-07-01T17:32:27.395Z",
+    "id": "mr2csfibo1d1"
+  }
+]
