@@ -228,11 +228,6 @@
 
 <script>
 // ===== 配置 =====
-const GITHUB_CONFIG = {
-  owner: 'flylevine12138-hash',
-  repo: 'zhicang-yingyong',
-  apiBase: 'https://api.github.com/repos/flylevine12138-hash/zhicang-yingyong'
-};
 
 // 访问密码（你可以随时修改这个密码）
 const ACCESS_PASSWORD = 'zhicangce2026';
@@ -291,40 +286,32 @@ const Admin = {
   },
 
   // 加载数据
-  // 加载数据（从 GitHub Issues 读取）
+  // 加载数据（从本地JSON文件读取，无跨域问题）
   async loadData() {
     try {
-      const res = await fetch(
-        `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/issues?state=all&per_page=100&labels=evaluation`,
-        {
-          headers: {
-            'Accept': 'application/vnd.github.v3+json'
-          }
-        }
-      );
+      const res = await fetch('data/evaluations.json');
 
       if (!res.ok) throw new Error(`加载数据失败: ${res.status}`);
 
-      const issues = await res.json();
+      this.allData = await res.json();
 
-      // 解析每个 issue 的 body（JSON 格式）
-      this.allData = issues
-        .map(issue => {
-          try {
-            const data = JSON.parse(issue.body);
-            data.issue_number = issue.number;
-            data.issue_html_url = issue.html_url;
-            data.submitted_at = issue.created_at;
-            return data;
-          } catch(e) {
-            return null;
-          }
-        })
-        .filter(Boolean);
+      // 客户端筛选
+      const brandFilter = document.getElementById('filterBrand').value;
+      const cityFilter = document.getElementById('filterCity').value;
+      const levelFilter = document.getElementById('filterLevel').value;
 
+      let filtered = this.allData;
+      if (brandFilter) filtered = filtered.filter(r => r.brand === brandFilter);
+      if (cityFilter) filtered = filtered.filter(r => r.city === cityFilter);
+      if (levelFilter) filtered = filtered.filter(r => r.level === levelFilter);
+
+      // 临时替换用于渲染
+      const originalData = this.allData;
+      this.allData = filtered;
       this.renderTable();
       this.updateStats();
       this.updateFilters();
+      this.allData = originalData;
 
     } catch(e) {
       console.error('加载失败:', e);
