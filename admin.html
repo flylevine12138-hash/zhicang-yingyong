@@ -225,9 +225,17 @@
     </table>
   </div>
 </div>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase-config.js"></script>
 
 <script>
 // ===== 配置 =====
+
+// 初始化 Supabase 客户端
+const supabaseClient = supabase.createClient(
+  SUPABASE_CONFIG.url,
+  SUPABASE_CONFIG.anonKey
+);
 
 // 访问密码（你可以随时修改这个密码）
 const ACCESS_PASSWORD = 'zhicangce2026';
@@ -285,15 +293,17 @@ const Admin = {
     document.getElementById('adminPage').style.display = 'block';
   },
 
-  // 加载数据
-  // 加载数据（从本地JSON文件读取，无跨域问题）
+  // 加载数据（从 Supabase 读取）
   async loadData() {
     try {
-      const res = await fetch('data/evaluations.json');
+      const { data, error } = await supabaseClient
+        .from('evaluation_reports')
+        .select('*')
+        .order('submitted_at', { ascending: false });
 
-      if (!res.ok) throw new Error(`加载数据失败: ${res.status}`);
+      if (error) throw new Error(error.message);
 
-      this.allData = await res.json();
+      this.allData = data || [];
 
       // 客户端筛选
       const brandFilter = document.getElementById('filterBrand').value;
