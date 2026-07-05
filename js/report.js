@@ -1,12 +1,5 @@
 /* ===== 报告生成模块 ===== */
 
-// 初始化 Supabase 客户端
-const _sb = window.supabase;
-const supabaseClient = _sb?.createClient(
-  SUPABASE_CONFIG.url,
-  SUPABASE_CONFIG.anonKey
-);
-
 const Report = {
   generate() {
     this._renderMeta();
@@ -425,10 +418,14 @@ const Report = {
 
       // 静默提交到 Supabase（失败不影响用户查看报告）
       try {
-        if (!supabaseClient) {
-          console.warn('⚠️ Supabase 客户端未初始化，跳过云端提交');
+        const _client = window.supabase?.createClient(
+          SUPABASE_CONFIG.url,
+          SUPABASE_CONFIG.anonKey
+        );
+        if (!_client) {
+          console.warn('⚠️ Supabase SDK 未加载，跳过云端提交');
         } else {
-          const { error } = await supabaseClient
+          const { error } = await _client
             .from('evaluation_reports')
             .insert([evalData]);
           if (error) {
