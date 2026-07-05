@@ -1,0 +1,350 @@
+<!--
+  智舱测 v3.0
+  Copyright © 2026 雄飞说×飞说智行. All rights reserved.
+  未经书面授权，禁止复制、修改、分发本代码。
+-->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a12">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="智舱测">
+  <meta name="description" content="只用几分钟，任何人都能完成的专业智舱测试">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <title>智舱测 - 智舱评测</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <!-- ===== 页面容器 ===== -->
+  <div id="app">
+
+    <!-- ===== 首页：品牌展示 ===== -->
+    <section id="page-home" class="page page-current">
+      <div class="home-bg">
+        <div class="particles" id="particles"></div>
+      </div>
+      <div class="home-content">
+        <div class="brand-icon">
+          <svg viewBox="0 0 120 125" class="logo-svg" style="width:110px;height:115px">
+            <defs>
+              <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1"/>
+                <stop offset="100%" style="stop-color:#7B2FFF;stop-opacity:1"/>
+              </linearGradient>
+            </defs>
+
+            <!-- ===== 整体：后排看前排智舱视角 ===== -->
+
+            <!-- 仪表盘顶棚弧线 -->
+            <path d="M6 38 Q60 8 114 38" fill="none" stroke="#00D4FF" stroke-width="2" opacity="0.5" stroke-linecap="round"/>
+
+            <!-- A柱左右 -->
+            <line x1="10" y1="36" x2="22" y2="62" stroke="#00D4FF" stroke-width="1.5" opacity="0.35"/>
+            <line x1="110" y1="36" x2="98" y2="62" stroke="#00D4FF" stroke-width="1.5" opacity="0.35"/>
+
+            <!-- ===== 挡风玻璃区域 ===== -->
+            <!-- 玻璃主体（梯形） -->
+            <path d="M20 40 L100 40 Q106 42 108 48 L108 56 Q106 58 102 58 L18 58 Q14 58 12 56 L12 48 Q14 42 20 40Z"
+                    fill="rgba(0,212,255,0.04)" stroke="#00D4FF" stroke-width="1.3" opacity="0.65"/>
+
+            <!-- 挡风玻璃上的HUD/AI投影图标组 - 参考图风格 -->
+            <!-- 中央AI圆圈 -->
+            <circle cx="60" cy="46" r="7" fill="none" stroke="#7B2FFF" stroke-width="1.2" opacity="0.55"/>
+            <text x="60" y="49" text-anchor="middle" fill="#7B2FFF" font-size="7" font-weight="700" font-family="sans-serif" opacity="0.7">AI</text>
+
+            <!-- 左上：车辆图标圈 -->
+            <circle cx="32" cy="44" r="5" fill="none" stroke="#00D4FF" stroke-width="0.9" opacity="0.45"/>
+            <rect x="29.5" y="41.5" width="5" height="3.5" rx="0.8" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.4"/>
+            <circle cx="31" cy="47" r="1" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <circle cx="33" cy="47" r="1" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+
+            <!-- 右上：音乐图标圈 -->
+            <circle cx="88" cy="44" r="5" fill="none" stroke="#00D4FF" stroke-width="0.9" opacity="0.45"/>
+            <ellipse cx="86" cy="45.5" rx="1.5" ry="1.8" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <ellipse cx="90" cy="44.5" rx="1.5" ry="1.8" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <line x1="87.5" y1="47.5" x2="87.5" y2="49.5" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <line x1="89.5" y1="46.5" x2="89.5" y2="50" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+
+            <!-- 左下：信号/WiFi图标圈 -->
+            <circle cx="34" cy="53" r="4.5" fill="none" stroke="#00D4FF" stroke-width="0.85" opacity="0.4"/>
+            <path d="M32 52.5 Q34 51 36 52.5 M30.5 54 Q34 51.5 37.5 54" fill="none" stroke="#00D4FF" stroke-width="0.55" opacity="0.35"/>
+
+            <!-- 右下：定位/导航图标圈 -->
+            <circle cx="86" cy="53" r="4.5" fill="none" stroke="#00D4FF" stroke-width="0.85" opacity="0.4"/>
+            <path d="M86 50 L88 53.5 L84 53.5 Z" fill="none" stroke="#00D4FF" stroke-width="0.55" opacity="0.35"/>
+            <circle cx="86" cy="54" r="1" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.3"/>
+
+            <!-- 后视镜（顶部中间） -->
+            <rect x="52" y="28" width="16" height="8" rx="2" fill="rgba(123,47,255,0.08)" stroke="#7B2FFF" stroke-width="0.8" opacity="0.4"/>
+            <rect x="55" y="30" width="10" height="3" rx="1" fill="rgba(0,212,255,0.15)" stroke="#00D4FF" stroke-width="0.5" opacity="0.4"/>
+
+            <!-- ===== 中控台区域 ===== -->
+
+            <!-- 仪表盘横条（中控台顶部边缘，带弧度） -->
+            <path d="M14 63 Q26 59 94 63" fill="none" stroke="#00D4FF" stroke-width="1.8" opacity="0.5" stroke-linecap="round"/>
+
+            <!-- ===== 左侧：方向盘 + 仪表 ===== -->
+            <!-- 方向盘外圈（三辐式概念感） -->
+            <ellipse cx="38" cy="82" rx="19" ry="15" fill="none" stroke="url(#grad1)" stroke-width="2.2" opacity="0.75"/>
+            <!-- 方向盘内环 -->
+            <ellipse cx="38" cy="82" rx="13" ry="10" fill="none" stroke="#00D4FF" stroke-width="1" opacity="0.25"/>
+
+            <!-- 三辐方向盘骨架 -->
+            <!-- 上辐 -->
+            <path d="M38 72 Q38 76 38 78" fill="none" stroke="#00D4FF" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+            <!-- 左辐 -->
+            <path d="M24 80 Q28 81 30 82" fill="none" stroke="#00D4FF" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+            <!-- 右辐 -->
+            <path d="M52 80 Q48 81 46 82" fill="none" stroke="#00D4FF" stroke-width="1.3" opacity="0.4" stroke-linecap="round"/>
+
+            <!-- 方向盘中心气囊区 -->
+            <circle cx="38" cy="82" r="5" fill="rgba(123,47,255,0.12)" stroke="#7B2FFF" stroke-width="1" opacity="0.5"/>
+            <circle cx="38" cy="82" r="2" fill="#7B2FFF" opacity="0.4"/>
+
+            <!-- 仪表盘（方向盘后方，两个小圆表） -->
+            <circle cx="28" cy="68" r="4.5" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="0.8" opacity="0.4"/>
+            <line x1="28" y1="68" x2="30.5" y2="66" stroke="#00D4FF" stroke-width="0.6" opacity="0.4"/>
+            <circle cx="48" cy="68" r="4.5" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="0.8" opacity="0.4"/>
+            <line x1="48" y1="68" x2="50.5" y2="66" stroke="#00D4FF" stroke-width="0.6" opacity="0.4"/>
+
+            <!-- ===== 右侧：中控大屏（竖向悬浮屏，参考图中右侧大屏） ===== -->
+            <!-- 大屏外框 -->
+            <rect x="70" y="64" width="22" height="30" rx="2.5" fill="rgba(123,47,255,0.12)" stroke="#7B2FFF" stroke-width="1.3"/>
+
+            <!-- 屏幕内容 - 导航地图感 -->
+            <rect x="73" y="67" width="16" height="11" rx="1" fill="rgba(0,212,255,0.06)"/>
+            <!-- 导航路线 -->
+            <polyline points="74,75 77,71 80,76 84,69 87,74" fill="none" stroke="#00D4FF" stroke-width="0.7" opacity="0.6" stroke-linejoin="round"/>
+            <!-- 定位点 -->
+            <circle cx="83" cy="70" r="1.2" fill="#7B2FFF" opacity="0.6"/>
+            <!-- 地图网格线 -->
+            <line x1="73" y1="72" x2="89" y2="72" stroke="#00D4FF" stroke-width="0.3" opacity="0.15"/>
+            <line x1="79" y1="67" x2="79" y2="78" stroke="#00D4FF" stroke-width="0.3" opacity="0.15"/>
+
+            <!-- 屏幕下方控制按钮区 -->
+            <rect x="73" y="80" width="16" height="12" rx="1" fill="rgba(0,212,255,0.04)"/>
+            <!-- 控制按钮网格 -->
+            <circle cx="76" cy="83" r="1.2" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <circle cx="81" cy="83" r="1.2" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <circle cx="86" cy="83" r="1.2" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.35"/>
+            <circle cx="76" cy="87" r="1.2" fill="none" stroke="#7B2FFF" stroke-width="0.5" opacity="0.35"/>
+            <circle cx="81" cy="87" r="1.2" fill="none" stroke="#7B2FFF" stroke-width="0.5" opacity="0.35"/>
+            <circle cx="86" cy="87" r="1.2" fill="none" stroke="#7B2FFF" stroke-width="0.5" opacity="0.35"/>
+
+            <!-- ===== 中控台下部（按键区域）===== -->
+            <rect x="54" y="97" width="28" height="10" rx="2.5" fill="rgba(0,212,255,0.05)" stroke="#00D4FF" stroke-width="0.8" opacity="0.3"/>
+            <!-- 物理按键 -->
+            <circle cx="60" cy="101" r="1.8" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.35"/>
+            <circle cx="68" cy="101" r="1.8" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.35"/>
+            <circle cx="76" cy="101" r="1.8" fill="none" stroke="#00D4FF" stroke-width="0.6" opacity="0.35"/>
+            <!-- 旋钮暗示 -->
+            <circle cx="68" cy="105" r="2.5" fill="none" stroke="#7B2FFF" stroke-width="0.7" opacity="0.3"/>
+            <line x1="68" y1="103" x2="68" y2="105" stroke="#7B2FFF" stroke-width="0.5" opacity="0.25"/>
+
+            <!-- ===== 氛围灯线条（贯穿座舱的青蓝光带）===== -->
+            <!-- 左门板氛围灯 -->
+            <path d="M8 62 Q6 75 8 92" fill="none" stroke="#00D4FF" stroke-width="1.8" opacity="0.4" stroke-linecap="round"/>
+            <!-- 右门板氛围灯 -->
+            <path d="M112 62 Q114 75 112 92" fill="none" stroke="#00D4FF" stroke-width="1.8" opacity="0.4" stroke-linecap="round"/>
+            <!-- 中控台横向氛围灯 -->
+            <path d="M18 96 Q60 93 102 96" fill="none" stroke="url(#grad1)" stroke-width="1.5" opacity="0.35" stroke-linecap="round"/>
+
+            <!-- 门板把手/细节 -->
+            <rect x="6" y="70" width="4" height="8" rx="1" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="0.5" opacity="0.2"/>
+            <rect x="110" y="70" width="4" height="8" rx="1" fill="rgba(0,212,255,0.06)" stroke="#00D4FF" stroke-width="0.5" opacity="0.2"/>
+
+            <!-- ===== 前排座椅轮廓 ===== -->
+            <!-- 驾驶位座椅（左下） -->
+            <path d="M12 98 Q12 112 22 116 L46 116 Q52 116 54 110"
+                  fill="rgba(0,212,255,0.03)" stroke="#00D4FF" stroke-width="0.8" opacity="0.2" stroke-linejoin="round"/>
+            <!-- 头枕暗示 -->
+            <rect x="18" y="95" width="6" height="6" rx="2" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.15"/>
+
+            <!-- 副驾座椅（右下） -->
+            <path d="M108 98 Q108 112 98 116 L74 116 Q68 116 66 110"
+                  fill="rgba(0,212,255,0.03)" stroke="#00D4FF" stroke-width="0.8" opacity="0.2" stroke-linejoin="round"/>
+            <rect x="96" y="95" width="6" height="6" rx="2" fill="none" stroke="#00D4FF" stroke-width="0.5" opacity="0.15"/>
+
+          </svg>
+        </div>
+        <h1 class="brand-name">智舱测</h1>
+        <p class="brand-subtitle">你的智舱，到底有多聪明？</p>
+        <p class="brand-desc">只用几分钟，任何人都能完成的专业智舱测试，<br>用手机直观评测您的爱车智能座舱的好用和聪明程度</p>
+        <button class="btn-primary btn-glow" onclick="App.goTo('page-setup')">
+          <span>开始评测</span>
+          <svg viewBox="0 0 24 24" width="20" height="20"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/></svg>
+        </button>
+        <p class="home-authority">评测框架参考 ISO/IEC/EN 国际标准体系<br>及中国汽车工业协会《汽车智能座舱交互体验测试评价规程》</p>
+        <p class="home-copyright">Copyright &copy; 2026-Present 雄飞说&times;飞说智行</p>
+      </div>
+    </section>
+
+    <!-- ===== 设置页：品牌+城市 ===== -->
+    <section id="page-setup" class="page">
+      <div class="page-inner">
+        <div class="page-header">
+          <button class="btn-back" onclick="App.goTo('page-home')">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <h2>评测设置</h2>
+        </div>
+
+        <!-- Step 1: 品牌选择 -->
+        <div class="setup-step" id="step-brand">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">选择车辆品牌</span>
+          </div>
+          <div class="brand-grid" id="brand-grid">
+            <button class="brand-btn" data-brand="小鹏" data-wake="你好小P">小鹏</button>
+            <button class="brand-btn" data-brand="蔚来" data-wake="Hi NOMI">蔚来</button>
+            <button class="brand-btn" data-brand="理想" data-wake="理想同学">理想</button>
+            <button class="brand-btn" data-brand="问界" data-wake="小艺小艺">问界</button>
+            <button class="brand-btn" data-brand="小米" data-wake="小爱同学">小米</button>
+            <button class="brand-btn" data-brand="比亚迪" data-wake="小迪小迪">比亚迪</button>
+            <button class="brand-btn" data-brand="极氪" data-wake="Hi Eva">极氪</button>
+            <button class="brand-btn" data-brand="零跑" data-wake="你好小零">零跑</button>
+            <button class="brand-btn" data-brand="特斯拉" data-wake="">特斯拉</button>
+            <button class="brand-btn brand-other" data-brand="other">
+              <span>其他</span>
+              <input type="text" id="brand-custom" placeholder="输入品牌" maxlength="10" style="display:none">
+            </button>
+          </div>
+          <div class="wake-word-display" id="wake-word-display" style="display:none">
+            <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" stroke="#00D4FF" fill="none" stroke-width="1.5"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#00D4FF" fill="none" stroke-width="1.5"/><line x1="12" y1="19" x2="12" y2="22" stroke="#00D4FF" stroke-width="1.5"/></svg>
+            <span>语音唤醒词：<strong id="wake-word-text"></strong></span>
+          </div>
+          <div class="wake-word-edit" id="wake-word-edit" style="display:none">
+            <input type="text" id="wake-word-input" placeholder="输入唤醒词" maxlength="20">
+            <button class="btn-small" onclick="App.setWakeWord()">确认</button>
+          </div>
+        </div>
+
+        <!-- Step 2: 城市选择 -->
+        <div class="setup-step" id="step-city">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-title">选择测试城市</span>
+          </div>
+          <div class="city-grid" id="city-grid">
+            <button class="city-btn" data-city="北京">北京</button>
+            <button class="city-btn" data-city="上海">上海</button>
+            <button class="city-btn" data-city="广州">广州</button>
+            <button class="city-btn" data-city="深圳">深圳</button>
+            <button class="city-btn" data-city="杭州">杭州</button>
+            <button class="city-btn" data-city="成都">成都</button>
+            <button class="city-btn" data-city="重庆">重庆</button>
+            <button class="city-btn" data-city="武汉">武汉</button>
+            <button class="city-btn" data-city="南京">南京</button>
+            <button class="city-btn" data-city="西安">西安</button>
+            <button class="city-btn" data-city="长沙">长沙</button>
+            <button class="city-btn" data-city="青岛">青岛</button>
+            <button class="city-btn city-other" data-city="other">
+              <span>其他</span>
+              <input type="text" id="city-custom" placeholder="输入城市" maxlength="10" style="display:none">
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 3: 准备提示 -->
+        <div class="setup-step" id="step-ready">
+          <div class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-title">准备好了吗？</span>
+          </div>
+          <div class="ready-tips">
+            <div class="tip-item">
+              <svg viewBox="0 0 24 24" width="20" height="20"><rect x="5" y="2" width="14" height="20" rx="2" stroke="#00D4FF" fill="none" stroke-width="1.5"/><line x1="12" y1="18" x2="12" y2="18.01" stroke="#00D4FF" stroke-width="2"/></svg>
+              <span>手持手机，坐在车内自然操作</span>
+            </div>
+            <div class="tip-item">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 2a3 3 0 00-3 3v7a3 3 0 006 0V5a3 3 0 00-3-3z" stroke="#00D4FF" fill="none" stroke-width="1.5"/><path d="M19 10v2a7 7 0 01-14 0v-2" stroke="#00D4FF" fill="none" stroke-width="1.5"/><line x1="12" y1="19" x2="12" y2="22" stroke="#00D4FF" stroke-width="1.5"/></svg>
+              <span>确保车机语音助手已就绪</span>
+            </div>
+            <div class="tip-item">
+              <svg viewBox="0 0 24 24" width="20" height="20"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#FFD700" fill="none" stroke-width="1.5"/></svg>
+              <span>建议手机连接充电器，防止评测中断</span>
+            </div>
+          </div>
+          <button class="btn-primary btn-glow btn-block" id="btn-start-eval" onclick="App.startEvaluation()" disabled>
+            <span>开始评测</span>
+          </button>
+          <p class="ready-note" id="ready-note">请先完成品牌和城市选择</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 评测主页面 ===== -->
+    <section id="page-eval" class="page">
+      <!-- 评测进度 -->
+      <div class="eval-progress">
+        <div class="progress-steps" id="eval-progress-steps"></div>
+      </div>
+
+      <!-- 评测内容区 -->
+      <div class="eval-content" id="eval-content">
+        <!-- 动态渲染评测卡片 -->
+      </div>
+    </section>
+
+    <!-- ===== 报告页 ===== -->
+    <section id="page-report" class="page">
+      <div class="page-inner report-page">
+        <div class="report-header">
+          <h2>评测报告</h2>
+          <div class="report-meta" id="report-meta"></div>
+        </div>
+
+        <!-- 总分 -->
+        <div class="total-score-card">
+          <canvas id="radar-chart" width="300" height="300"></canvas>
+          <div class="total-score-number" id="total-score-number">--</div>
+          <div class="total-score-label">综合评分（满分100分）</div>
+        </div>
+
+        <!-- 各维度得分 -->
+        <div class="dimension-scores" id="dimension-scores"></div>
+
+        <!-- 操作按钮 -->
+        <div class="report-actions">
+          <button class="btn-primary btn-report-save" onclick="App.saveReport()">保存报告</button>
+          <button class="btn-cyan" onclick="App.goTo('page-qrcode')">了解更多智舱能力</button>
+          <button class="btn-primary" onclick="App.goTo('page-home')">回到首页</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 二维码页面 ===== -->
+    <section id="page-qrcode" class="page">
+      <div class="page-inner qrcode-page">
+        <div class="page-header">
+          <button class="btn-back" onclick="App.goBack()">
+            <svg viewBox="0 0 24 24" width="24" height="24"><path d="M19 12H5M12 19l-7-7 7-7" stroke="currentColor" fill="none" stroke-width="2" stroke-linecap="round"/></svg>
+          </button>
+          <h2>了解更多</h2>
+        </div>
+        <div class="qrcode-content">
+          <img src="images/qrcode-feishuixing.png" alt="雄飞说二维码" class="qrcode-img"/>
+          <p class="qrcode-tip">扫一扫关注「雄飞说」视频号<br>获取更多智舱评测与科技资讯</p>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- Toast提示 -->
+  <div class="toast" id="toast"></div>
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="js/supabase-config.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/eval-ui.js"></script>
+  <script src="js/report.js"></script>
+</body>
+</html>
